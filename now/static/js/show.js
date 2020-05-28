@@ -19,8 +19,7 @@
         interactObj.SigSendMessageToJS.connect(function(str) 
         {
             var data = JSON.parse(str);
-            d3.select('body').insert('div','div');
-            //d3.selectAll("svg").remove();
+			d3.selectAll("svg").remove();
             draw(data);
 
 
@@ -52,7 +51,7 @@ function draw(data){
 
 
     var marge = {top:60,bottom:60,left:60,right:60}
-    var svg = d3.select('body').select('div').append("svg")
+    var svg = d3.select('body').append("svg")
     .attr("width",width)
     .attr('height',height)
 

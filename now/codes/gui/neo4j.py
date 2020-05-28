@@ -7,15 +7,40 @@ sys.path.append(__path) # 添加自己指定的搜索路径
 
 import PyQt5.QtWidgets as QtWidgets
 from PyQt5.QtGui import QPixmap, QGuiApplication
-from PyQt5.QtCore import Qt, QUrl, QEvent
+from PyQt5.QtCore import Qt, QUrl, QEvent,QObject,pyqtSignal,pyqtSlot
 import PyQt5.QtWebEngineWidgets as WebEngine
+from PyQt5.QtWebEngineWidgets import *
+from PyQt5.QtWebChannel import *
+
+
 
 from mypy2neo import search
-from Ui_neo4j import Ui_Form
+from gui.Ui_neo4j import Ui_Form
+from myLib import myLib
+
+
+class TInteractObj(QObject):
+    SigReceivedMessFromJS = pyqtSignal(str)
+    SigSendMessageToJS = pyqtSignal(str)
+    def __init__(self, parent = None):
+        super().__init__(parent)
+
+    @pyqtSlot(str)
+    def JSSendMessage(self, strParameter):
+        print('JSSendMessage(%s) from Html' %strParameter)
+        self.SigReceivedMessFromJS.emit(strParameter)
+ 
+    @pyqtSlot(result=str)
+    def fun(self):
+
+        print('TInteractObj.fun()')
+        return 'hello'
 
 
 class neo4j(QtWidgets.QWidget):
+    SigSendMessageToJS = pyqtSignal(str)
     def __init__(self, parent = None):
+
         super().__init__(parent)
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -41,13 +66,31 @@ class neo4j(QtWidgets.QWidget):
 
         self.splitterV1.addWidget(self.ui.SqlToolBox)
         self.splitterV1.addWidget(self.ui.LabelWidget)
-        self.url = 'file:///' + os.path.dirname(os.path.dirname(d)) +\
-        '/static/html/show_1.html'
-        self.url = self.url.replace('\\','/')
-        print("self.url = ",self.url)
+#        self.url = 'file:///' + os.path.dirname(os.path.dirname(d)) +\
+ #       '/static/html/JSTest.html'
 
-        self.browser = WebEngine.QWebEngineView()
-        self.browser.load(QUrl(self.url))
+         #---Web widget and layout-------------------------
+        self.browser = QWebEngineView(self)
+        self.pWebChannel = QWebChannel(self.browser.page())
+        self.pInteractObj = TInteractObj(self)
+        self.pWebChannel.registerObject("interactObj", self.pInteractObj)
+ 
+        self.browser.page().setWebChannel(self.pWebChannel)
+ 
+        #self.url = 'file:///F:/demo/now/static/html/JSTest.html'
+        self.url = 'file:///' + os.path.dirname(os.path.dirname(d)) +\
+       '/static/html/show.html'
+        self.url = self.url.replace('\\','/')
+        self.browser.page().load(QUrl(self.url))
+        self.browser.show()
+#------------------------------------------------------------------------------
+       # self.url = 'file:///F:/demo/now`/static/html/JSTest.html'
+        
+        #self.url = self.url.replace('\\','/')
+        #print("self.url = ",self.url)
+
+        #self.browser = QWebEngineView()
+        #self.browser.load(QUrl(self.url))
         
         self.splitterV2 = QtWidgets.QSplitter(self)
         self.splitterV2.setOrientation(Qt.Vertical)
@@ -60,6 +103,21 @@ class neo4j(QtWidgets.QWidget):
         self.splitter.addWidget(self.splitterV2)
         layout.addWidget(self.splitter)
         self.setLayout(layout)
+
+        #---------------------------------
+
+
+        self.pInteractObj.SigReceivedMessFromJS.connect(self.OnReceiveMessageFromJS)
+        self.SigSendMessageToJS.connect(self.pInteractObj.SigSendMessageToJS)
+ 
+    def OnReceiveMessageFromJS(self, strParameter):
+        print('OnReceiveMessageFromJS()')
+        if not strParameter:
+            return
+        print("get str " + strParameter)
+
+
+#-------------------------------------------------------------
    
     def __draw(self, picture_path):
         self.ui.Picture.clear()
@@ -81,7 +139,9 @@ class neo4j(QtWidgets.QWidget):
             newItem = QtWidgets.QTableWidgetItem(dic[dictKey])
             self.ui.table_sql.setItem(0,i,newItem)
             i += 1
+    def __pushJsonToJs(self,json):
 
+            self.SigSendMessageToJS.emit(json)
 
 
 
@@ -102,6 +162,7 @@ class neo4j(QtWidgets.QWidget):
         else self.defaultPicture
         print('picpath = ',picPath)
         self.__draw(picPath)
+        self.__pushJsonToJs(self.neo.json())
 
 
 
