@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <script src="../js/jquery-3.4.1.min.js"></script>
+    <script src=../js/qwebchannel.js></script>
+    <title>QWebChannel测试</title>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="test">
+    this is test !
+</div>
+<button id='sent' onclick='sent()'>向前端传值</button>
+<button class = 'btn' onclick='sentBack()'>向后端传值</button>
+<button onclick='show()'}>show the value</button>
+ <script>
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+        window.pyjs = channel.objects.testObject;    //把对象赋值到JS中
+    });
+    function show(){
+        alert(waitingMessage);
+    }
+    var waitingMessage=null;//等待接收python传来的数据
+    var message2py="message from js";//向python发送的数据
+    function sentBack(){
+        pyjs.testJS2Py(message2py);
+    }
+    function sent(){
+        try{
+            var get=1;
+            get=pyjs.testPy2JS();
+            alert(get);
+        }catch(e){
+            alert(e);
+        }
+        
+    }
+ </script>
+</script>
+</body>
+</html>
