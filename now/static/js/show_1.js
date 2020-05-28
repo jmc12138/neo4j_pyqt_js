@@ -19,6 +19,7 @@
         interactObj.SigSendMessageToJS.connect(function(str) 
         {  
             var data = JSON.parse(str);
+            d3.selectAll("svg").remove();
             draw(data)  
 
 
@@ -30,7 +31,8 @@ function draw(data){
 
     var nodes = data.nodes;
     var links = data.links;
-
+    var width = 800;
+    var height = 600;
 
     index = []
     for(iNode in nodes){
@@ -49,9 +51,10 @@ function draw(data){
 
 
     var marge = {top:60,bottom:60,left:60,right:60}
-    var svg = d3.select("svg")
-    var width = svg.attr("width")
-    var height = svg.attr("height")
+    var svg = d3.select('body').append("svg")
+    .attr("width",width)
+    .attr('height',height)
+
     var g = svg.append("g")
         .attr("transform","translate("+marge.top+","+marge.left+")");
         
@@ -130,12 +133,16 @@ function draw(data){
         })
     //文字
     gs.append("text")
-        .attr("x",-10)
-        .attr("y",-20)
-        .attr("dy",10)
+        .style("fill","#000")
+        .attr("dominant-baseline","middle")
+        .attr("text-anchor", "middle")//在圆圈中加上数据
         .text(function(d){
+            if(d.name.length > 6){
+                return d.name.substring(0,6) + '....';
+            }
             return d.name;
-        })
+            
+        });
 
 
 

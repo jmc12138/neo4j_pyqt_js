@@ -84,7 +84,7 @@ class neo4j(QtWidgets.QWidget):
         self.browser.page().load(QUrl(self.url))
         self.browser.show()
 #------------------------------------------------------------------------------
-       # self.url = 'file:///F:/demo/now/static/html/JSTest.html'
+       # self.url = 'file:///F:/demo/now`/static/html/JSTest.html'
         
         #self.url = self.url.replace('\\','/')
         #print("self.url = ",self.url)
