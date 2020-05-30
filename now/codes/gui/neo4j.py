@@ -138,6 +138,9 @@ class neo4j(QtWidgets.QWidget):
         a = search.search_return(strParameter)
         print("expandNode")
         print(a.json())
+        self.__createSearch(a.dict())
+
+        self.__draw(a.picture_path())
         self.ToJS_expandNode.emit(a.json())
         
 
@@ -146,6 +149,10 @@ class neo4j(QtWidgets.QWidget):
 #-------------------------------------------------------------
    
     def __draw(self, picture_path):
+        if not picture_path:
+            picture_path = self.defaultPicture
+        else:
+            picture_path = picture_path[0]
         self.ui.Picture.clear()
         pic = QPixmap(picture_path)
         self.ui.Picture.setPixmap(pic)
@@ -159,15 +166,16 @@ class neo4j(QtWidgets.QWidget):
         
 
     def __createSearch(self, dic):
+        self.ui.table_sql.setColumnCount(len(dic))
+        self.ui.table_sql.setRowCount(1)
+        self.ui.table_sql.setHorizontalHeaderLabels(dic.keys())
 
         i = 0
         for dictKey in dic.keys():
             newItem = QtWidgets.QTableWidgetItem(dic[dictKey])
             self.ui.table_sql.setItem(0,i,newItem)
             i += 1
-    def __pushJsonToJs(self,json):
-            
-            self.SigSendMessageToJS.emit(json)
+
 
 
 
@@ -179,15 +187,8 @@ class neo4j(QtWidgets.QWidget):
         node_dict = self.neo.dict()
         print(node_dict)
         if node_dict:
-            self.ui.table_sql.setColumnCount(len(node_dict))
-            self.ui.table_sql.setRowCount(1)
-            self.ui.table_sql.setHorizontalHeaderLabels(node_dict.keys())
             self.__createSearch(node_dict)
-        picPath = self.neo.picture_path()[0] if\
-        self.neo.picture_path()\
-        else self.defaultPicture
-        print('picpath = ',picPath)
-        self.__draw(picPath)
+        self.__draw(self.neo.picture_path())
         self.ToJS_showNode.emit(self.neo.json())
 
 
