@@ -8,9 +8,9 @@ sys.path.append(__path) # 添加自己指定的搜索路径
 import PyQt5.QtWidgets as QtWidgets
 from PyQt5.QtGui import QPixmap, QGuiApplication
 from PyQt5.QtCore import Qt, QUrl, QEvent,QObject,pyqtSignal,pyqtSlot
-import PyQt5.QtWebEngineWidgets as WebEngine
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWebChannel import *
+
 
 
 
@@ -19,26 +19,33 @@ from gui.Ui_neo4j import Ui_Form
 from myLib import myLib
 
 
-class TInteractObj(QObject):
-    SigReceivedMessFromJS = pyqtSignal(str)
-    SigSendMessageToJS = pyqtSignal(str)
+
+class channel_showNode(QObject):
+    fromJS = pyqtSignal(str)
+    toJS = pyqtSignal(str)
     def __init__(self, parent = None):
         super().__init__(parent)
 
     @pyqtSlot(str)
     def JSSendMessage(self, strParameter):
-        print('JSSendMessage(%s) from Html' %strParameter)
-        self.SigReceivedMessFromJS.emit(strParameter)
- 
-    @pyqtSlot(result=str)
-    def fun(self):
+        print('showNode(%s) from Html' %strParameter)
+        self.fromJS.emit(strParameter)
 
-        print('TInteractObj.fun()')
-        return 'hello'
+class channel_expandNode(QObject):
+    fromJS = pyqtSignal(str)
+    toJS = pyqtSignal(str)
+    def __init__(self, parent = None):
+        super().__init__(parent)
+
+    @pyqtSlot(str)
+    def JSSendMessage(self, strParameter):
+        print('showNode(%s) from Html' %strParameter)
+        self.fromJS.emit(strParameter)
 
 
 class neo4j(QtWidgets.QWidget):
-    SigSendMessageToJS = pyqtSignal(str)
+    ToJS_showNode = pyqtSignal(str)
+    ToJS_expandNode = pyqtSignal(str)
     def __init__(self, parent = None):
 
         super().__init__(parent)
@@ -72,9 +79,16 @@ class neo4j(QtWidgets.QWidget):
          #---Web widget and layout-------------------------
         self.browser = QWebEngineView(self)
         self.pWebChannel = QWebChannel(self.browser.page())
-        self.pInteractObj = TInteractObj(self)
-        self.pWebChannel.registerObject("interactObj", self.pInteractObj)
- 
+        #------js和qt通信--------------------------
+
+
+
+        self.channel_expandNode = channel_expandNode(self)
+        self.pWebChannel.registerObject('channel_expandNode',self.channel_expandNode)
+
+        self.channel_showNode = channel_showNode(self)
+        self.pWebChannel.registerObject("channel_showNode",self.channel_showNode) 
+
         self.browser.page().setWebChannel(self.pWebChannel)
  
         #self.url = 'file:///F:/demo/now/static/html/JSTest.html'
@@ -107,14 +121,26 @@ class neo4j(QtWidgets.QWidget):
         #---------------------------------
 
 
-        self.pInteractObj.SigReceivedMessFromJS.connect(self.OnReceiveMessageFromJS)
-        self.SigSendMessageToJS.connect(self.pInteractObj.SigSendMessageToJS)
- 
-    def OnReceiveMessageFromJS(self, strParameter):
-        print('OnReceiveMessageFromJS()')
+        self.channel_showNode.fromJS.connect(self.returnShowNode)
+        self.ToJS_showNode.connect(self.channel_showNode.toJS)
+        self.channel_expandNode.fromJS.connect(self.returnExpandNode)
+        self.ToJS_expandNode.connect(self.channel_expandNode.toJS)
+
+    def returnShowNode(self,strParameter):
         if not strParameter:
             return
-        print("get str " + strParameter)
+        a = search.search_return(strParameter)
+        self.ToJS_showNode.emit(a.json())
+
+    def returnExpandNode(self,strParameter):
+        if not strParameter:
+            return
+        a = search.search_return(strParameter)
+        print("expandNode")
+        print(a.json())
+        self.ToJS_expandNode.emit(a.json())
+        
+
 
 
 #-------------------------------------------------------------
@@ -140,7 +166,7 @@ class neo4j(QtWidgets.QWidget):
             self.ui.table_sql.setItem(0,i,newItem)
             i += 1
     def __pushJsonToJs(self,json):
-
+            
             self.SigSendMessageToJS.emit(json)
 
 
@@ -162,7 +188,7 @@ class neo4j(QtWidgets.QWidget):
         else self.defaultPicture
         print('picpath = ',picPath)
         self.__draw(picPath)
-        self.__pushJsonToJs(self.neo.json())
+        self.ToJS_showNode.emit(self.neo.json())
 
 
 

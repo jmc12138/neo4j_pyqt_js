@@ -1,22 +1,32 @@
-// var data = {"nodes": [{"name": "\u7f8e\u56fd", "id": 20}, {"\u7eed\u822a\u529b_\u6d77\u91cc": "4300", "\u9690\u8eab\u80fd\u529b": "\u5177\u5907", "nation": "\u7f8e\u56fd", "\u6700\u9ad8\u822a\u884c\u901f\u5ea6_\u8282": "50.0", "\u6700\u5927\u6392\u6c34\u91cf_\u5428": "2784", "name": "\u5409\u4f5b\u5179\u53f7\u6218\u6597\u8230", "\u5403\u6c34_m": "4.27", "\u5c3a\u5bf8_m": "127.6", "\u6807\u51c6\u6392\u6c34\u91cf_\u5428": "2176", "\u8230\u5bbd_m": "31.6", "\u7c7b\u522b": "\u8230\u8239", "id": 22}, {"nation": "\u7f8e\u56fd", "\u673a\u7ffc\u9762\u79ef_m2": "42.7", "\u53d1\u52a8\u673a\u6570_\u4e2a": "1", "name": "F-35_a", "\u98de\u884c\u901f\u5ea6_\u9a6c\u8d6b": "1.6", "\u9ad8\u5ea6_m": "4.33", "\u957f\u5ea6_m": "15.67", "\u98de\u884c\u9ad8\u5ea6_m": "18288", "\u96f7\u8fbe\u6563\u5c04\u622a\u9762\u79ef_\u5e73\u65b9\u7c73": "0.55", "\u7ffc\u5c55_m": "10.7", "\u7c7b\u522b": "\u98de\u673a", "id": 42}, {"\u7eed\u822a\u529b_\u6d77\u91cc": "4300", "\u9690\u8eab\u80fd\u529b": "\u4e0d\u5177\u5907", "nation": "\u7f8e\u56fd", "\u6700\u9ad8\u822a\u884c\u901f\u5ea6_\u8282": "30.0", "\u6700\u5927\u6392\u6c34\u91cf_\u5428": "9200", "name": "\u9ea6\u514b\u574e\u8d1d\u5c14\u53f7\u5bfc\u5f39\u9a71\u9010\u8230", "\u5c3a\u5bf8_m": "155.3", "\u5403\u6c34_m": "9.3", "\u6807\u51c6\u6392\u6c34\u91cf_\u5428": "x", "\u8230\u5bbd_m": "20.4", "\u7c7b\u522b": "\u8230\u8239", "id": 23}, {"nation": "\u7f8e\u56fd", "\u673a\u7ffc\u9762\u79ef_m2": "78.04", "\u53d1\u52a8\u673a\u6570_\u4e2a": "2", "name": "F-22", "\u98de\u884c\u901f\u5ea6_\u9a6c\u8d6b": "1.15", "\u9ad8\u5ea6_m": "5.08", "\u957f\u5ea6_m": "18.92", "\u98de\u884c\u9ad8\u5ea6_m": "18000", "\u96f7\u8fbe\u6563\u5c04\u622a\u9762\u79ef_\u5e73\u65b9\u7c73": "0.1", "\u7ffc\u5c55_m": "13.56", "\u7c7b\u522b": "\u98de\u673a", "id": 62}], "links": [{"relationships": "have", "id": 20, "source": 20, "target": 22}, {"relationships": "have", "id": 22, "source": 20, "target": 42}, {"relationships": "have", "id": 21, "source": 20, "target": 23}, {"relationships": "have", "id": 23, "source": 20, "target": 62}]};
-setInterval(function() 
+ //var data = {"nodes": [{"name": "\u7f8e\u56fd", "id": 20}, {"\u7eed\u822a\u529b_\u6d77\u91cc": "4300", "\u9690\u8eab\u80fd\u529b": "\u5177\u5907", "nation": "\u7f8e\u56fd", "\u6700\u9ad8\u822a\u884c\u901f\u5ea6_\u8282": "50.0", "\u6700\u5927\u6392\u6c34\u91cf_\u5428": "2784", "name": "\u5409\u4f5b\u5179\u53f7\u6218\u6597\u8230", "\u5403\u6c34_m": "4.27", "\u5c3a\u5bf8_m": "127.6", "\u6807\u51c6\u6392\u6c34\u91cf_\u5428": "2176", "\u8230\u5bbd_m": "31.6", "\u7c7b\u522b": "\u8230\u8239", "id": 22}, {"nation": "\u7f8e\u56fd", "\u673a\u7ffc\u9762\u79ef_m2": "42.7", "\u53d1\u52a8\u673a\u6570_\u4e2a": "1", "name": "F-35_a", "\u98de\u884c\u901f\u5ea6_\u9a6c\u8d6b": "1.6", "\u9ad8\u5ea6_m": "4.33", "\u957f\u5ea6_m": "15.67", "\u98de\u884c\u9ad8\u5ea6_m": "18288", "\u96f7\u8fbe\u6563\u5c04\u622a\u9762\u79ef_\u5e73\u65b9\u7c73": "0.55", "\u7ffc\u5c55_m": "10.7", "\u7c7b\u522b": "\u98de\u673a", "id": 42}, {"\u7eed\u822a\u529b_\u6d77\u91cc": "4300", "\u9690\u8eab\u80fd\u529b": "\u4e0d\u5177\u5907", "nation": "\u7f8e\u56fd", "\u6700\u9ad8\u822a\u884c\u901f\u5ea6_\u8282": "30.0", "\u6700\u5927\u6392\u6c34\u91cf_\u5428": "9200", "name": "\u9ea6\u514b\u574e\u8d1d\u5c14\u53f7\u5bfc\u5f39\u9a71\u9010\u8230", "\u5c3a\u5bf8_m": "155.3", "\u5403\u6c34_m": "9.3", "\u6807\u51c6\u6392\u6c34\u91cf_\u5428": "x", "\u8230\u5bbd_m": "20.4", "\u7c7b\u522b": "\u8230\u8239", "id": 23}, {"nation": "\u7f8e\u56fd", "\u673a\u7ffc\u9762\u79ef_m2": "78.04", "\u53d1\u52a8\u673a\u6570_\u4e2a": "2", "name": "F-22", "\u98de\u884c\u901f\u5ea6_\u9a6c\u8d6b": "1.15", "\u9ad8\u5ea6_m": "5.08", "\u957f\u5ea6_m": "18.92", "\u98de\u884c\u9ad8\u5ea6_m": "18000", "\u96f7\u8fbe\u6563\u5c04\u622a\u9762\u79ef_\u5e73\u65b9\u7c73": "0.1", "\u7ffc\u5c55_m": "13.56", "\u7c7b\u522b": "\u98de\u673a", "id": 62}], "links": [{"relationships": "have", "id": 20, "source": 20, "target": 22}, {"relationships": "have", "id": 22, "source": 20, "target": 42}, {"relationships": "have", "id": 21, "source": 20, "target": 23}, {"relationships": "have", "id": 23, "source": 20, "target": 62}]};
+window.onload = function() 
 {
     new QWebChannel(qt.webChannelTransport, function(channel) 
     {
-
-        var channel_showNode = channel.objects.channel_showNode;
-
+        //Get Qt interact object  
+        var interactObj = channel.objects.interactObj;
+        
+        //Web send message to Qt 
+ 
             
-        channel_showNode.toJS.connect(function(str) 
+            //Web use the interface of Qt 
+            //interactObj.fun(alert);
+            interactObj.JSSendMessage('a');  
+                   
+ 
+        
+        //Web connect the Qt signal, then Qt can call "output" function
+        interactObj.SigSendMessageToJS.connect(function(str) 
         {
-            d3.selectAll("svg").remove();
-            //alert('1');
             var data = JSON.parse(str);
+			d3.selectAll("svg").remove();
             draw(data);
+
+
         });    
     });  
-},1000)
-
+}  
+// d3.selectAll("svg").remove();
 // draw(data);
 function draw(data){
 
@@ -41,7 +51,12 @@ function draw(data){
     var width = 800;
     var height = 300;
     var marge = {top:60,bottom:60,left:60,right:60}
+    var svg = d3.select('body').append("svg")
+    .attr("width",width)
+    .attr('height',height)
 
+    var g = svg.append("g")
+        .attr("transform","translate("+marge.top+","+marge.left+")");
         
     //设置一个color的颜色比例尺，为了让不同的扇形呈现不同的颜色
     var colorScale = d3.scaleOrdinal()
@@ -58,22 +73,14 @@ function draw(data){
 
 
     forceDirectedGraph(nodes,links);
-    function forceDirectedGraph(nodes,links,flag = true)
+    function forceDirectedGraph(nodes,links)
     {
-        d3.selectAll("svg").remove();
-        var svg = d3.select('body').append("svg")
-        .attr("width",width)
-        .attr('height',height)
-
-        var g = svg.append("g")
-            .attr("transform","translate("+marge.top+","+marge.left+")");
         //alert("get into forceDirectedGraph");
 
         //初始化力导向图，也就是传入数据
         //生成节点数据
 
         forceSimulation.nodes(nodes);
-        //alert(JSON.stringify(nodes));
         //生成边数据
         forceSimulation.force("link")
             .links(links)
@@ -82,12 +89,10 @@ function draw(data){
 
 
         //设置图形的中心位置 
-        if(flag){
-            forceSimulation.force("center",d3.forceCenter());
-            forceSimulation.force("center")
-                .x(width/2)
-                .y(height/2);
-        }
+        forceSimulation.force("center")
+            .x(width/2)
+            .y(height/2);
+
         //有了节点和边的数据后，我们开始绘制
         //绘制边
         var paths = g.append("g")
@@ -126,14 +131,12 @@ function draw(data){
             )
             .on("dblclick",function(d){
                 new QWebChannel(qt.webChannelTransport, function(channel){
-                    var channel_expandNode = channel.objects.channel_expandNode;
-                        channel_expandNode.JSSendMessage(d.name);
+                    var interactObj = channel.objects.interactObj;
+                        interactObj.JSSendMessage(d.name);
 
-                    channel_expandNode.toJS.connect(function(str) 
+                    interactObj.SigSendMessageToJS.connect(function(str) 
                     {
-                        //alert('2');
-                        //alert(str);
-                        //alert(JSON.stringify(str));
+
                         let data2 = JSON.parse(str);
                         // alert(JSON.stringify(data2.nodes));
                         // alert(JSON.stringify(data2.links));
@@ -144,36 +147,27 @@ function draw(data){
                             if(nodes_index.indexOf(new_node['id']) == -1){
                                 //alert(JSON.stringify(new_node));
                                 nodes.push(new_node);
-                                //alert(JSON.stringify(new_node));
                                 nodes_index.push(new_node['id']);
                             }
                         });
                         $.each(data2.links,function(d){
-                            new_link = data2.links[d];
+                            new_link = data2.links;
                             if(links_index.indexOf(new_link['id']) == -1){
                                 links_index.push(new_link['id']);
                                 let target = new_link["target"];
                                 new_link["target"] = nodes_index.indexOf(target);
                                 let source = new_link["source"];
                                 new_link["source"] = nodes_index.indexOf(source);
-                                links.push((new_link));
-                                //alert(JSON.stringify(new_link));
+                                links.push(new_link);
                             }
-                        });
-
-                        //alert("get new links");
-                        // alert(JSON.stringify(nodes));
-                        // alert(JSON.stringify(links));
+                        }); 
+                        alert("get new links");
+                        //alert(JSON.stringify(links));
                         
-                        forceDirectedGraph(nodes,links,false);
+                        forceDirectedGraph(nodes,links);
                     }); 
                 });
-                // alert("ds");
-                // var e = { "name": "姓名6"};
-                // var f =  {"source" : 0  , "target": 2};
-                // nodes.push(e);
-                // links.push(f);
-                // forceDirectedGraph(nodes,links);
+ 
             });
 
             
