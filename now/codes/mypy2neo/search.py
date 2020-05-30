@@ -36,6 +36,12 @@ class search_return():
 	def dict(self):
 		a = str(self.node())  #fuck neo4j
 		return dict(self.node()) if self.node() else None
+	def singleNode_json(self):
+		node = self.node();
+		a = str(node)  #fuck neo4j
+		a = dict(node)
+		a["id"] = node.identity
+		return json.dumps({"nodes":[a],"links":[]})
 
 
 
@@ -82,3 +88,4 @@ if __name__ == '__main__':
 	path = '../../static/data/json/search_return.json'
 	dd = search_return(name)
 	print(dd.json())
+	print(dd.singleNode_json())

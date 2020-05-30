@@ -130,7 +130,7 @@ class neo4j(QtWidgets.QWidget):
         if not strParameter:
             return
         a = search.search_return(strParameter)
-        self.ToJS_showNode.emit(a.json())
+        self.ToJS_showNode.emit(a.singleNode_json())
 
     def returnExpandNode(self,strParameter):
         if not strParameter:
@@ -188,8 +188,8 @@ class neo4j(QtWidgets.QWidget):
         print(node_dict)
         if node_dict:
             self.__createSearch(node_dict)
-        self.__draw(self.neo.picture_path())
-        self.ToJS_showNode.emit(self.neo.json())
+            self.__draw(self.neo.picture_path())
+            self.ToJS_showNode.emit(self.neo.singleNode_json())
 
 
 
