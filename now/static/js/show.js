@@ -1,21 +1,21 @@
 // var data = {"nodes": [{"name": "\u7f8e\u56fd", "id": 20}, {"\u7eed\u822a\u529b_\u6d77\u91cc": "4300", "\u9690\u8eab\u80fd\u529b": "\u5177\u5907", "nation": "\u7f8e\u56fd", "\u6700\u9ad8\u822a\u884c\u901f\u5ea6_\u8282": "50.0", "\u6700\u5927\u6392\u6c34\u91cf_\u5428": "2784", "name": "\u5409\u4f5b\u5179\u53f7\u6218\u6597\u8230", "\u5403\u6c34_m": "4.27", "\u5c3a\u5bf8_m": "127.6", "\u6807\u51c6\u6392\u6c34\u91cf_\u5428": "2176", "\u8230\u5bbd_m": "31.6", "\u7c7b\u522b": "\u8230\u8239", "id": 22}, {"nation": "\u7f8e\u56fd", "\u673a\u7ffc\u9762\u79ef_m2": "42.7", "\u53d1\u52a8\u673a\u6570_\u4e2a": "1", "name": "F-35_a", "\u98de\u884c\u901f\u5ea6_\u9a6c\u8d6b": "1.6", "\u9ad8\u5ea6_m": "4.33", "\u957f\u5ea6_m": "15.67", "\u98de\u884c\u9ad8\u5ea6_m": "18288", "\u96f7\u8fbe\u6563\u5c04\u622a\u9762\u79ef_\u5e73\u65b9\u7c73": "0.55", "\u7ffc\u5c55_m": "10.7", "\u7c7b\u522b": "\u98de\u673a", "id": 42}, {"\u7eed\u822a\u529b_\u6d77\u91cc": "4300", "\u9690\u8eab\u80fd\u529b": "\u4e0d\u5177\u5907", "nation": "\u7f8e\u56fd", "\u6700\u9ad8\u822a\u884c\u901f\u5ea6_\u8282": "30.0", "\u6700\u5927\u6392\u6c34\u91cf_\u5428": "9200", "name": "\u9ea6\u514b\u574e\u8d1d\u5c14\u53f7\u5bfc\u5f39\u9a71\u9010\u8230", "\u5c3a\u5bf8_m": "155.3", "\u5403\u6c34_m": "9.3", "\u6807\u51c6\u6392\u6c34\u91cf_\u5428": "x", "\u8230\u5bbd_m": "20.4", "\u7c7b\u522b": "\u8230\u8239", "id": 23}, {"nation": "\u7f8e\u56fd", "\u673a\u7ffc\u9762\u79ef_m2": "78.04", "\u53d1\u52a8\u673a\u6570_\u4e2a": "2", "name": "F-22", "\u98de\u884c\u901f\u5ea6_\u9a6c\u8d6b": "1.15", "\u9ad8\u5ea6_m": "5.08", "\u957f\u5ea6_m": "18.92", "\u98de\u884c\u9ad8\u5ea6_m": "18000", "\u96f7\u8fbe\u6563\u5c04\u622a\u9762\u79ef_\u5e73\u65b9\u7c73": "0.1", "\u7ffc\u5c55_m": "13.56", "\u7c7b\u522b": "\u98de\u673a", "id": 62}], "links": [{"relationships": "have", "id": 20, "source": 20, "target": 22}, {"relationships": "have", "id": 22, "source": 20, "target": 42}, {"relationships": "have", "id": 21, "source": 20, "target": 23}, {"relationships": "have", "id": 23, "source": 20, "target": 62}]};
 setInterval(function() 
-{
-    new QWebChannel(qt.webChannelTransport, function(channel) 
     {
-
-        var channel_showNode = channel.objects.channel_showNode;
-
-            
-        channel_showNode.toJS.connect(function(str) 
+        new QWebChannel(qt.webChannelTransport, function(channel) 
         {
-            d3.selectAll("svg").remove();
-            //alert('1');
-            var data = JSON.parse(str);
-            draw(data);
-        });    
-    });  
-},1000)
+
+            var channel_showNode = channel.objects.channel_showNode;
+
+                
+            channel_showNode.toJS.connect(function(str) 
+            {
+                d3.selectAll("svg").remove();
+                //alert('1');
+                var data = JSON.parse(str);
+                draw(data);
+            });    
+        });  
+    },1000);
 
 // draw(data);
 function draw(data){
@@ -124,27 +124,26 @@ function draw(data){
                 .on("drag",dragged)
                 .on("end",ended)
             )
+            .on("click",function(d){
+                new QWebChannel(qt.webChannelTransport, function(channel){
+                    var channel_showPicPro = channel.objects.channel_showPicPro;
+                        channel_showPicPro.JSSendMessage(d.name);
+
+                    }); 
+                })
             .on("dblclick",function(d){
                 new QWebChannel(qt.webChannelTransport, function(channel){
                     var channel_expandNode = channel.objects.channel_expandNode;
                         channel_expandNode.JSSendMessage(d.name);
 
-                    channel_expandNode.toJS.connect(function(str) 
-                    {
-                        //alert('2');
-                        //alert(str);
-                        //alert(JSON.stringify(str));
+                    channel_expandNode.toJS.connect(function(str){
                         let data2 = JSON.parse(str);
-                        // alert(JSON.stringify(data2.nodes));
-                        // alert(JSON.stringify(data2.links));
-                        // alert(typeof data2.nodes);
+
                         $.each(data2.nodes,function(d){
 
                             new_node = data2.nodes[d];
                             if(nodes_index.indexOf(new_node['id']) == -1){
-                                //alert(JSON.stringify(new_node));
                                 nodes.push(new_node);
-                                //alert(JSON.stringify(new_node));
                                 nodes_index.push(new_node['id']);
                             }
                         });
@@ -160,20 +159,9 @@ function draw(data){
                                 //alert(JSON.stringify(new_link));
                             }
                         });
-
-                        //alert("get new links");
-                        // alert(JSON.stringify(nodes));
-                        // alert(JSON.stringify(links));
-                        
                         forceDirectedGraph(nodes,links,false);
                     }); 
                 });
-                // alert("ds");
-                // var e = { "name": "姓名6"};
-                // var f =  {"source" : 0  , "target": 2};
-                // nodes.push(e);
-                // links.push(f);
-                // forceDirectedGraph(nodes,links);
             });
 
             

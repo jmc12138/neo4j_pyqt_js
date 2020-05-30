@@ -39,13 +39,25 @@ class channel_expandNode(QObject):
 
     @pyqtSlot(str)
     def JSSendMessage(self, strParameter):
-        print('showNode(%s) from Html' %strParameter)
+        print('expandNode(%s) from Html' %strParameter)
+        self.fromJS.emit(strParameter)
+
+class channel_showPicPro(QObject):
+    fromJS = pyqtSignal(str)
+    toJS = pyqtSignal(str)
+    def __init__(self, parent = None):
+        super().__init__(parent)
+
+    @pyqtSlot(str)
+    def JSSendMessage(self, strParameter):
+        print('showPicPro(%s) from Html' %strParameter)
         self.fromJS.emit(strParameter)
 
 
 class neo4j(QtWidgets.QWidget):
     ToJS_showNode = pyqtSignal(str)
     ToJS_expandNode = pyqtSignal(str)
+    #ToJS_showPicPro = pyqtSignal(str)
     def __init__(self, parent = None):
 
         super().__init__(parent)
@@ -87,7 +99,10 @@ class neo4j(QtWidgets.QWidget):
         self.pWebChannel.registerObject('channel_expandNode',self.channel_expandNode)
 
         self.channel_showNode = channel_showNode(self)
-        self.pWebChannel.registerObject("channel_showNode",self.channel_showNode) 
+        self.pWebChannel.registerObject("channel_showNode",self.channel_showNode)
+
+        self.channel_showPicPro = channel_showPicPro(self)
+        self.pWebChannel.registerObject('channel_showPicPro',self.channel_showPicPro) 
 
         self.browser.page().setWebChannel(self.pWebChannel)
  
@@ -126,6 +141,17 @@ class neo4j(QtWidgets.QWidget):
         self.channel_expandNode.fromJS.connect(self.returnExpandNode)
         self.ToJS_expandNode.connect(self.channel_expandNode.toJS)
 
+        self.channel_showPicPro.fromJS.connect(self.changePicPro)
+        # self.ToJS_showPicPro.connect(self.channel_showPicPro.toJS)
+
+    def changePicPro(self,strParameter):
+        if not strParameter:
+            return
+        a = search.search_return(strParameter)
+        print("changePicPro")
+        self.__createSearch(a.dict())
+        self.__draw(a.picture_path())
+
     def returnShowNode(self,strParameter):
         if not strParameter:
             return
@@ -137,10 +163,6 @@ class neo4j(QtWidgets.QWidget):
             return
         a = search.search_return(strParameter)
         print("expandNode")
-        print(a.json())
-        self.__createSearch(a.dict())
-
-        self.__draw(a.picture_path())
         self.ToJS_expandNode.emit(a.json())
         
 
